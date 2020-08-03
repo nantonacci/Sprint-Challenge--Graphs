@@ -29,6 +29,35 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+# backtracking to go back to room with moves available
+backtrack = []
+backward_directions = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
+
+# track visited rooms
+visited = set()
+
+while len(visited) < len(room_graph):
+    next_move = None
+
+    for exit in player.current_room.get_exits():
+        if player.current_room.get_room_in_direction(exit) not in visited:
+
+            next_move = exit
+
+    
+    if next_move is not None:
+        traversal_path.append(next_move)
+        backtrack.append(backward_directions[next_move])
+
+        player.travel(next_move)
+        visited.add(player.current_room)
+
+    else:
+        # backtrack
+        next_move = backtrack.pop()
+
+        traversal_path.append(next_move)
+        player.travel(next_move)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
